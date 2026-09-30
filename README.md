@@ -18,6 +18,13 @@ git remote add origin git@github.com:<계정>/harness-kit.git && git push -u ori
 pip install copier   # 또는 uv tool install copier / pipx install copier
 ```
 
+> **Windows / `copier: command not found`**
+> `pip install --user copier` 로 설치했을 때 실행파일 경로가 PATH 에 없을 수 있다. 두 가지 중 하나:
+> - 그대로 `python -m copier ...` 로 호출 (아래 예시의 `copier` 를 `python -m copier` 로 바꿔 쓴다).
+> - 또는 PATH 에 Python `Scripts` 디렉터리를 추가. Windows Store Python 3.13 기준 예:
+>   `C:\Users\<사용자>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts`
+>   (`python -m site --user-site` 로 위치 확인 후 `..\Scripts` 를 잡으면 된다.)
+
 Claude Code 에서 플러그인 설치 (한 번만):
 ```
 /plugin marketplace add <계정>/harness-kit
