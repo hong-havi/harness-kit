@@ -1,6 +1,6 @@
 {
   "name": "harness",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "역할 기반 세션(planner/implementer/reviewer/qa) 작업 절차 커맨드",
   "author": { "name": "havi-hong" }
 }
