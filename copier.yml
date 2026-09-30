@@ -1,0 +1,30 @@
+_subdirectory: template
+_min_copier_version: "9.0.0"
+
+project_name:
+  type: str
+  help: 프로젝트 이름
+
+stack:
+  type: str
+  help: 주 스택
+  choices:
+    TypeScript/Node: typescript
+    Python: python
+    기타: other
+  default: typescript
+
+lint_cmd:
+  type: str
+  help: 린트 명령 (비우면 생략)
+  default: "{% if stack == 'typescript' %}npm run lint --silent{% elif stack == 'python' %}ruff check .{% endif %}"
+
+typecheck_cmd:
+  type: str
+  help: 타입체크 명령 (비우면 생략)
+  default: "{% if stack == 'typescript' %}npx tsc --noEmit{% elif stack == 'python' %}mypy .{% endif %}"
+
+test_cmd:
+  type: str
+  help: 테스트 명령 (비우면 생략)
+  default: "{% if stack == 'typescript' %}npm test --silent{% elif stack == 'python' %}pytest -q{% endif %}"

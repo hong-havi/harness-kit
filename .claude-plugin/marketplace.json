@@ -1,0 +1,11 @@
+{
+  "name": "harness-kit",
+  "owner": { "name": "YOUR_NAME" },
+  "plugins": [
+    {
+      "name": "harness",
+      "source": "./plugins/harness",
+      "description": "역할 기반 세션(planner/implementer/reviewer/qa) 작업 절차 커맨드"
+    }
+  ]
+}
