@@ -33,8 +33,18 @@ Claude Code 에서 플러그인 설치 (한 번만):
 
 ## 2. 새 프로젝트 시작
 
+먼저 키트 저장소를 로컬 한 곳에 clone 해 둔다 (모든 프로젝트가 이 경로를 참조한다).
+
 ```bash
-copier copy gh:<계정>/harness-kit my-project   # 스택, 검증 명령을 물어봄
+git clone https://github.com/<계정>/harness-kit.git ~/src/harness-kit
+```
+
+> **왜 로컬 경로인가.** copier 는 `gh:` 로 원격 참조하면 사용자 캐시에 mirror 를 만들어 두는데, Windows + Python 3.13 조합에서 mirror 디렉터리가 프로세스 종료 시 깨지는 이슈가 있다 (`git worktree add` 가 "not a git repository" 로 실패). 로컬 경로는 mirror 를 안 쓰므로 이 문제를 피한다. macOS/Linux 에서도 로컬 경로가 더 예측 가능하다.
+
+프로젝트 생성:
+
+```bash
+copier copy ~/src/harness-kit my-project   # 스택, 검증 명령을 물어봄
 cd my-project
 git init && git add -A && git commit -m "init harness"   # worktree 가 하네스 파일을 갖도록 반드시 커밋
 ./scripts/check.sh                                      # 검증 명령 동작 확인
@@ -95,14 +105,17 @@ todo ─[planner]→ planned ─[implementer]→ in_review ─[reviewer]→ in_q
 
 ## 6. 하네스 개선 반영
 
-키트 저장소를 고친 뒤 새 태그를 붙이면:
+키트 저장소를 고친 뒤 새 태그를 붙였다면, 로컬 clone 을 먼저 최신으로 당긴 뒤 프로젝트에서 `copier update` 를 돌린다:
+
 ```bash
-cd my-project && copier update          # 템플릿 변경분을 3-way merge 로 반영
+git -C ~/src/harness-kit pull --tags     # 로컬 clone 최신화
+cd my-project && copier update           # 템플릿 변경분을 3-way merge 로 반영
 ```
+
 플러그인은 Claude Code 에서 `/plugin marketplace update harness-kit`.
 
 ## 알려진 한계
 
 - 쓰기 가드는 Edit/Write 계열 도구만 검사한다. Bash 로 파일을 쓰는 것은 막지 못한다. 필요하면 PreToolUse 에 Bash 검사를 추가하거나 역할별 권한 설정을 더 좁힌다.
 - `work/` 는 항상 메인 체크아웃에서만 변경된다(worktree 에서 실행해도 task.sh 가 메인을 찾아감). 작업 브랜치는 `work/` 를 건드리지 않으므로 병합 충돌이 없다. `work/` 변경분은 메인에서 주기적으로 커밋한다.
-- 요구 도구: bash, git 2.31+, Claude Code CLI. macOS/Linux 기준 (Windows 는 WSL).
+- 요구 도구: bash, git 2.31+, Claude Code CLI. macOS/Linux 기본 지원. Windows 는 Git Bash + Python 3.10+ 에서 동작하나 copier 원격 참조(`gh:`, `git+https://…`) 는 캐시 mirror 문제로 실패한다 (§2 참고). 로컬 clone 경로만 사용하면 문제 없음.
