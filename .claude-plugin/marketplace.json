@@ -1,6 +1,6 @@
 {
   "name": "harness-kit",
-  "owner": { "name": "YOUR_NAME" },
+  "owner": { "name": "havi-hong" },
   "plugins": [
     {
       "name": "harness",

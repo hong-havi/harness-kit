@@ -31,7 +31,8 @@ USAGE
 
 fm_get() {
   awk -v k="$2" 'NR==1&&$0=="---"{f=1;next} f&&$0=="---"{exit}
-    f{i=index($0,":"); if(substr($0,1,i-1)==k){v=substr($0,i+1); sub(/^[ \t]+/,"",v); print v; exit}}' "$1"
+    f{i=index($0,":"); if(substr($0,1,i-1)==k){v=substr($0,i+1);
+        sub(/^[ \t]+/,"",v); sub(/[ \t\r]+$/,"",v); print v; exit}}' "$1"
 }
 fm_set() {
   local tmp; tmp="$(mktemp)"
@@ -186,7 +187,9 @@ cmd_move() {
   f="$(task_file "$id")"; from="$(fm_get "$f" status)"; h="$HANDOFFS/$id"
   case "$from>$to" in
     "todo>planned")
-      require_done "$h/01-plan.md" ;;
+      require_done "$h/01-plan.md"
+      [ -z "$(git -C "$MAIN" status --porcelain -- docs 2>/dev/null)" ] || \
+        die "docs/ 에 커밋되지 않은 변경이 있습니다. implementer worktree 는 base 브랜치에서 갈라지므로 planner 의 docs/ 변경은 planned 로 넘기기 전에 커밋해야 반영됩니다" ;;
     "planned>in_review" | "changes_requested>in_review")
       require_done "$h/02-impl.md"; run_check "$id" "$f" ;;
     "in_review>in_qa")

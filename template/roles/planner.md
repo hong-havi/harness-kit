@@ -17,4 +17,5 @@
 - 요구사항이 모호하면 추측하지 말고 사용자에게 묻는다.
 
 ## 완료 조건
-01-plan.md 작성(TODO 마커 삭제) → `./scripts/task.sh move <ID> planned`
+01-plan.md 작성(TODO 마커 삭제) → `docs/` 변경이 있으면 base 브랜치에 커밋 → `./scripts/task.sh move <ID> planned`
+(implementer worktree 는 base 에서 갈라지므로, 커밋 안 된 docs 변경은 다음 단계로 넘어가지 않는다)
