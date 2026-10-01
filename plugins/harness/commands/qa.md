@@ -1,8 +1,10 @@
 ---
-description: QA 세션 절차 (scripts/role.sh qa 로 실행)
+description: QA 세션 절차 (scripts/role 로 실행)
 argument-hint: "<작업ID>"
 ---
 이 세션의 역할은 QA 다. 역할 규칙은 system prompt 에 주입된 역할 정의를 따른다. 대상 작업: `$ARGUMENTS`
+
+> 플랫폼 주의: 아래 예시의 `./scripts/task.sh`·`./scripts/check.sh` 는 Unix 표기다. Windows 세션이면 각각 `.\scripts\task.ps1`·`.\scripts\check.ps1` 로 치환해 호출한다.
 
 1. `./scripts/task.sh show $ARGUMENTS` 로 수용 기준과 01~03 인수인계를 읽는다.
 2. `./scripts/check.sh` 를 실행한다.

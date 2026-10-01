@@ -44,11 +44,13 @@ git clone https://github.com/<계정>/harness-kit.git ~/src/harness-kit
 프로젝트 생성:
 
 ```bash
-copier copy ~/src/harness-kit my-project   # 스택, 검증 명령을 물어봄
+copier copy ~/src/harness-kit my-project   # OS (unix/windows), 스택, 검증 명령을 물어봄
 cd my-project
 git init && git add -A && git commit -m "init harness"   # worktree 가 하네스 파일을 갖도록 반드시 커밋
-./scripts/check.sh                                      # 검증 명령 동작 확인
+./scripts/check.sh                                      # 또는 Windows: .\scripts\check.ps1
 ```
+
+**OS 선택**: `os=unix` 를 고르면 `scripts/*.sh` 와 bash 훅이 들어오고, `os=windows` 를 고르면 `scripts/*.ps1` 와 PowerShell 훅이 들어온다. 한 프로젝트는 둘 중 한 트랙만 가진다. 섞어쓰려면 두 번 렌더해서 수동으로 합친다.
 
 기존 프로젝트에 적용할 때도 같은 명령을 프로젝트 폴더에 실행하면 된다 (충돌 파일은 copier 가 물어본다).
 
@@ -62,12 +64,22 @@ todo ─[planner]→ planned ─[implementer]→ in_review ─[reviewer]→ in_q
 
 각 역할은 **별도 터미널에서** 실행한다. 작업 ID 를 생략하면 그 역할의 다음 작업을 자동으로 집는다.
 
+Unix/macOS:
 ```bash
 ./scripts/role.sh planner              # 메인 체크아웃에서 실행, 새 작업 생성·계획
 ./scripts/role.sh implementer          # ../my-project-T-001 worktree 생성 후 그 안에서 실행
 ./scripts/role.sh reviewer             # 같은 worktree 에서 읽기 전용으로 실행
 ./scripts/role.sh qa
 ./scripts/task.sh list                 # 보드 현황 (Claude 안에서는 /harness:status)
+```
+
+Windows PowerShell:
+```powershell
+.\scripts\role.ps1 planner
+.\scripts\role.ps1 implementer
+.\scripts\role.ps1 reviewer
+.\scripts\role.ps1 qa
+.\scripts\task.ps1 list
 ```
 
 `done` 이 되면 스크립트가 출력하는 병합 명령을 사람이 확인하고 실행한다.
@@ -116,6 +128,10 @@ cd my-project && copier update           # 템플릿 변경분을 3-way merge �
 
 ## 알려진 한계
 
-- 쓰기 가드는 Edit/Write 계열 도구만 검사한다. Bash 로 파일을 쓰는 것은 막지 못한다. 필요하면 PreToolUse 에 Bash 검사를 추가하거나 역할별 권한 설정을 더 좁힌다.
-- `work/` 는 항상 메인 체크아웃에서만 변경된다(worktree 에서 실행해도 task.sh 가 메인을 찾아감). 작업 브랜치는 `work/` 를 건드리지 않으므로 병합 충돌이 없다. `work/` 변경분은 메인에서 주기적으로 커밋한다.
-- 요구 도구: bash, git 2.31+, Claude Code CLI. macOS/Linux 기본 지원. Windows 는 Git Bash + Python 3.10+ 에서 동작하나 copier 원격 참조(`gh:`, `git+https://…`) 는 캐시 mirror 문제로 실패한다 (§2 참고). 로컬 clone 경로만 사용하면 문제 없음.
+- 쓰기 가드는 Edit/Write 계열 도구만 검사한다. Bash/PowerShell 로 파일을 쓰는 것은 막지 못한다. 필요하면 PreToolUse 에 Bash 검사를 추가하거나 역할별 권한 설정을 더 좁힌다.
+- `work/` 는 항상 메인 체크아웃에서만 변경된다(worktree 에서 실행해도 task 스크립트가 메인을 찾아감). 작업 브랜치는 `work/` 를 건드리지 않으므로 병합 충돌이 없다. `work/` 변경분은 메인에서 주기적으로 커밋한다.
+- 요구 도구: git 2.31+, Claude Code CLI, 그리고 OS 트랙에 맞는 셸:
+  - Unix 트랙: bash. macOS/Linux 기본 지원.
+  - Windows 트랙: Windows PowerShell 5.1 또는 PowerShell 7. `.ps1` 파일은 UTF-8 BOM + Console 인코딩 UTF-8 설정으로 한국어 메시지와 유니코드가 정상 표시된다.
+- copier 원격 참조(`gh:`, `git+https://…`) 는 Windows + Python 3.13 조합에서 캐시 mirror 문제로 실패한다 (§2 참고). 로컬 clone 경로만 사용하면 문제 없음.
+- Windows 트랙 `check.conf` 의 명령은 PowerShell 로 해석된다. 셸 전용 명령(`true`, `:`) 대신 `cmd /c exit 0` 같은 PS 호환 명령을 쓰거나 비워 둔다.

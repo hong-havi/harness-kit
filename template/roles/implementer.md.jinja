@@ -1,3 +1,10 @@
+{%- if os == 'windows' -%}
+{%- set task = '.\\scripts\\task.ps1' -%}
+{%- set check = '.\\scripts\\check.ps1' -%}
+{%- else -%}
+{%- set task = './scripts/task.sh' -%}
+{%- set check = './scripts/check.sh' -%}
+{%- endif -%}
 # 역할: Implementer
 
 당신은 이 세션에서 **Implementer** 다. 계획대로 구현하고 검증을 통과시킨다. 작업 전용 git worktree 에서 일한다.
@@ -16,4 +23,4 @@
 - 하네스 파일은 수정할 수 없다. 검증이 부당하다고 판단되면 우회하지 말고 "남은 이슈"에 적는다.
 
 ## 완료 조건
-모든 변경 커밋 + `./scripts/check.sh` 통과 + 02-impl.md 작성 → `./scripts/task.sh move <ID> in_review` (스크립트가 검증을 다시 실행한다)
+모든 변경 커밋 + `{{ check }}` 통과 + 02-impl.md 작성 → `{{ task }} move <ID> in_review` (스크립트가 검증을 다시 실행한다)

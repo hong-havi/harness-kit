@@ -1,9 +1,30 @@
 _subdirectory: template
 _min_copier_version: "9.0.0"
 
+_exclude:
+  - "copier.yml"
+  - "~*"
+  - "*.py[co]"
+  - "__pycache__"
+  - ".git"
+  - ".DS_Store"
+  - ".svn"
+  - "{% if os == 'windows' %}scripts/*.sh{% else %}__never_match_a__{% endif %}"
+  - "{% if os == 'windows' %}scripts/hooks/*.sh{% else %}__never_match_b__{% endif %}"
+  - "{% if os != 'windows' %}scripts/*.ps1{% else %}__never_match_c__{% endif %}"
+  - "{% if os != 'windows' %}scripts/hooks/*.ps1{% else %}__never_match_d__{% endif %}"
+
 project_name:
   type: str
   help: 프로젝트 이름
+
+os:
+  type: str
+  help: 운영체제 (하네스 스크립트 종류를 결정)
+  choices:
+    macOS/Linux (bash): unix
+    Windows (PowerShell): windows
+  default: unix
 
 stack:
   type: str

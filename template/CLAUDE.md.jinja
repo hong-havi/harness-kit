@@ -9,7 +9,15 @@
 - 설계: `docs/architecture.md` / 규칙: `docs/conventions.md` / 결정 기록: `docs/decisions/`
 
 ## 명령
+{%- if os == 'windows' %}
+- 검증 (완료 판단의 유일한 기준): `.\scripts\check.ps1`
+- 작업 상태 조작: `.\scripts\task.ps1 <명령>`
+- 역할 세션 실행: `.\scripts\role.ps1 <역할> [작업ID]`
+{%- else %}
 - 검증 (완료 판단의 유일한 기준): `./scripts/check.sh`
+- 작업 상태 조작: `./scripts/task.sh <명령>`
+- 역할 세션 실행: `./scripts/role.sh <역할> [작업ID]`
+{%- endif %}
 {%- if stack == 'typescript' %}
 - 의존성 설치: `npm install`
 {%- elif stack == 'python' %}

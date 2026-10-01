@@ -1,8 +1,10 @@
 ---
-description: Planner 세션 절차 (scripts/role.sh planner 로 실행)
+description: Planner 세션 절차 (scripts/role 로 실행)
 argument-hint: "[작업ID]"
 ---
 이 세션의 역할은 Planner 다. 역할 규칙은 system prompt 에 주입된 역할 정의를 따른다. 대상 작업: `$ARGUMENTS`
+
+> 플랫폼 주의: 아래 예시의 `./scripts/task.sh` 는 Unix 표기다. Windows 세션이면 `.\scripts\task.ps1` 로 치환해 호출한다 (프로젝트에 둘 중 하나만 들어있다).
 
 1. 작업 ID 가 비어 있으면 사용자에게 만들 기능을 묻고 `./scripts/task.sh new "<제목>"` 로 생성한 뒤 `./scripts/task.sh claim <ID> planner` 한다.
 2. `./scripts/task.sh show <ID>` 로 작업을 읽고, 관련 `docs/` 와 코드를 읽는다.
