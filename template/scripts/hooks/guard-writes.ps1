@@ -13,12 +13,12 @@ $inputRaw = [Console]::In.ReadToEnd()
 if (-not $inputRaw) { exit 0 }
 
 try {
-    $input = $inputRaw | ConvertFrom-Json -ErrorAction Stop
+    $hookInput = $inputRaw | ConvertFrom-Json -ErrorAction Stop
 } catch { exit 0 }
 
 $path = $null
-if ($input.PSObject.Properties['tool_input']) {
-    $ti = $input.tool_input
+if ($hookInput.PSObject.Properties['tool_input']) {
+    $ti = $hookInput.tool_input
     foreach ($key in @('file_path', 'notebook_path')) {
         if ($ti.PSObject.Properties[$key]) {
             $path = [string]$ti.$key

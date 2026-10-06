@@ -11,8 +11,8 @@ if ($env:HARNESS_ROLE -in @('planner', 'reviewer', 'qa')) { exit 0 }
 $inputRaw = [Console]::In.ReadToEnd()
 if ($inputRaw) {
     try {
-        $input = $inputRaw | ConvertFrom-Json -ErrorAction Stop
-        if ($input.PSObject.Properties['stop_hook_active'] -and $input.stop_hook_active) { exit 0 }
+        $hookInput = $inputRaw | ConvertFrom-Json -ErrorAction Stop
+        if ($hookInput.PSObject.Properties['stop_hook_active'] -and $hookInput.stop_hook_active) { exit 0 }
     } catch { }
 }
 

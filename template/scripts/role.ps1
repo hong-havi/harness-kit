@@ -37,7 +37,7 @@ if (-not $claudeCmd) { $claudeCmd = Get-Command claude.cmd -ErrorAction Silently
 if (-not $claudeCmd -and -not $DRY) { Die 'claude CLI 를 찾을 수 없습니다' }
 
 if (-not $Id) {
-    $Id = (& pwsh -NoProfile -File $TASK next $Role 2>$null)
+    $Id = (& $TASK next $Role 2>$null)
     if ($Id) { $Id = $Id.Trim() }
     if (-not $Id -and $Role -ne 'planner') {
         Die "$Role 가 처리할 작업이 없습니다 ('task.ps1 list' 로 확인)"
@@ -46,9 +46,9 @@ if (-not $Id) {
 
 $dir = $MAIN
 if ($Role -ne 'planner') {
-    $branch = (& pwsh -NoProfile -File $TASK get $Id branch).Trim()
-    $base = (& pwsh -NoProfile -File $TASK get $Id base).Trim()
-    $wt = (& pwsh -NoProfile -File $TASK worktree $Id).Trim()
+    $branch = (& $TASK get $Id branch).Trim()
+    $base = (& $TASK get $Id base).Trim()
+    $wt = (& $TASK worktree $Id).Trim()
     if (-not $wt) {
         if ($Role -ne 'implementer') { Die "$Id 의 worktree 가 없습니다. implementer 단계가 먼저 필요합니다" }
         $wt = Join-Path (Split-Path -Parent $MAIN) ((Split-Path -Leaf $MAIN) + "-$Id")
@@ -73,7 +73,7 @@ if ($Role -ne 'planner') {
 if ($Id) {
     if ($DRY) { Write-Output "[dry-run] task.ps1 claim $Id $Role" }
     else {
-        & pwsh -NoProfile -File $TASK claim $Id $Role
+        & $TASK claim $Id $Role
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
 }
